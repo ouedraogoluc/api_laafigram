@@ -28,9 +28,10 @@ class ArticleController:
             message = check_validity_data(data=data, entity='article')
             if message == '':
                 country=Country.query.filter(Country.country_name == data["country"]).first()
+                print(country)
                 
                 if country:
-                    new_article=Article(title=data["title"], content=data["content"], date_published=data["date_published"], source=data["source"] ,country=data["country"])
+                    new_article=Article(title=data["title"], content=data["content"], date_published=data["date_published"], source=data["source"], country=country )
                     db.session.add(new_article) 
                     db.session.commit()
                 else:
@@ -43,6 +44,7 @@ class ArticleController:
         except (SQLAlchemyError , Exception) as e:
             db.session.rollback()
             print(type(e), e)
+            print_exception()
             return make_response(jsonify(response= 'Error Server ' )),500
         
     def show(self, id):
@@ -77,9 +79,9 @@ class CountryController:
 
     def index(self):
         try:
-            query =   Article.query.order_by(Article.created_at.desc())
-            results = [Article.json(article) for article in query ]
-            return make_response(jsonify(articles= results, total=len(results))),200
+            query =   Country.query.order_by(Country.created_at.desc())
+            results = [Country.json(country) for country in query ]
+            return make_response(jsonify(countries= results, total=len(results))),200
         except SQLAlchemyError as e:
             print(str(e))
             return make_response(jsonify(response= 'Error Server '  )),500

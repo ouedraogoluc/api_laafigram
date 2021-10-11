@@ -31,10 +31,9 @@ class User(db.Model):
              "id":self.id,
              "username":self.username,
              "email":self.email,
-             "create_at": format_datetime(self.create_at), 
-             "update_at": format_datetime(self.update_at)
+             "create_at": format_datetime(self.created_at), 
+             "update_at": format_datetime(self.updated_at)
              }
-
 
 #create classe
 class Country(db.Model):
@@ -54,15 +53,15 @@ class Country(db.Model):
     articles = db.relationship('Article', backref='country')
     
     def __repr__(self):
-        return '<Country {} {} {}>'.format(self.id, self.country_name)
+        return '<Country {} {}>'.format(self.id, self.country_name)
 
     #json object 
     def json(self):
         return { 
             "id":self.id,
             "country_name":self.country_name,
-            "create_at": format_datetime(self.create_at), 
-             "update_at": format_datetime(self.update_at) 
+            "create_at": format_datetime(self.created_at), 
+             "update_at": format_datetime(self.updated_at) 
             }
 
 class Article(db.Model):
@@ -75,7 +74,7 @@ class Article(db.Model):
     #create field
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
-    content = db.Column(db.String(80), nullable=False)
+    content = db.Column(db.Text, nullable=False)
     date_published = db.Column(db.String(80), nullable=False)
     source = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -86,7 +85,7 @@ class Article(db.Model):
     
     # formatte l'affichage
     def __repr__(self):
-        return '<Article {} {} {}>'.format(self.id, self.title, self.content , self.date_published, self.source )
+        return '<Article {} {} {} {} {}>'.format(self.id, self.title, self.content , self.date_published, self.source )
 
     #json object 
     def json(self):
@@ -96,8 +95,9 @@ class Article(db.Model):
             "content":self.content, 
             "date_published":self.date_published, 
             "source":self.source, 
-            "create_at": format_datetime(self.create_at), 
-             "update_at": format_datetime(self.update_at)
+             "country" : Country.query.get(self.country_id).country_name,
+            "create_at": format_datetime(self.created_at), 
+             "update_at": format_datetime(self.updated_at)
             }
 
 class Media(db.Model):
@@ -125,8 +125,8 @@ class Media(db.Model):
         return { 
             "id":self.id,
             "url":self.url ,
-            "create_at": format_datetime(self.create_at), 
-             "update_at": format_datetime(self.update_at)
+            "create_at": format_datetime(self.created_at), 
+             "update_at": format_datetime(self.updated_at)
             }
 
 #create classe
@@ -155,10 +155,9 @@ class TypeMedia(db.Model):
         return { 
             "id":self.id,
             "type_media_name":self.type_medias_name,
-            "create_at": format_datetime(self.create_at), 
-             "update_at": format_datetime(self.update_at) 
+            "create_at": format_datetime(self.created_at), 
+             "update_at": format_datetime(self.updated_at) 
             }
-
 
 def create_default_user():
     new_user = User(username="luc ouedraogo", email="luc@gmail.com", password=generate_password_hash("admin"))

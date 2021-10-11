@@ -35,7 +35,7 @@ from news.errors import *
 @app.route('/')
 @cross_origin()
 def index():
-   return make_response(jsonify(message = 'Bienvenue sur notre api de produit')),200
+   return make_response(jsonify(message = 'Bienvenue sur notre api de news')),200
 
 @app.route('/news/api/v1/articles', methods=['GET', 'POST'])
 @cross_origin()
